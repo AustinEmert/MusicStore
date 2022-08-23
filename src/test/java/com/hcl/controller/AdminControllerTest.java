@@ -1,5 +1,6 @@
 package com.hcl.controller;
 
+import com.hcl.model.Item;
 import com.hcl.model.User;
 import com.hcl.repository.ItemRepository;
 import com.hcl.repository.OrderItemRepository;
@@ -69,23 +70,23 @@ public class AdminControllerTest  {
         mockMvc.perform(get("/admin/editItem/1")).andExpect(status().isOk());
     }
 
-//    @Test
-//    @DirtiesContext(methodMode = DirtiesContext.MethodMode.BEFORE_METHOD)
-//    @WithMockUser(username = "user", password = "password", roles = "ADMIN")
-//    public void editItemsPostTest() throws Exception {
-//        Item item1 = new Item(9.99, "test1", "", "", "", 100L);
-//        itemRepository.save(item1);
-//        mockMvc.perform(post("/admin/editItem/" + item1.getId())
-//                .param("price", "9.99")
-//                .param("name", "new name")
-//                .param("thumbnail", "")
-//                .param("category", "")
-//                .param("description", ""))
-//                .andExpect(status().isOk());
-//        assertTrue(itemRepository.findAll().stream().anyMatch(item -> item.getName() == "new name"));
-//        assertFalse(itemRepository.findAll().stream().anyMatch(item -> item.getName() == "test1"));
-//
-//    }
+    @Test
+    @DirtiesContext(methodMode = DirtiesContext.MethodMode.BEFORE_METHOD)
+    @WithMockUser(username = "user", password = "password", roles = "ADMIN")
+    public void editItemsPostTest() throws Exception {
+        Item item1 = new Item(9.99, "test1", "", "", "", 100L);
+        itemRepository.save(item1);
+        mockMvc.perform(post("/admin/editItem/" + item1.getId())
+                .param("price", "9.99")
+                .param("name", "new name")
+                .param("thumbnail", "")
+                .param("category", "")
+                .param("description", ""))
+                .andExpect(status().isOk());
+        assertTrue(itemRepository.findAll().stream().anyMatch(item -> item.getName() == "new name"));
+        assertFalse(itemRepository.findAll().stream().anyMatch(item -> item.getName() == "test1"));
+
+    }
 
     @Test
     @WithMockUser(username = "user", password = "password", roles = "ADMIN")

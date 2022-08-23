@@ -1,6 +1,7 @@
 package com.hcl.restcontroller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.hcl.controllers.AdminController;
 import com.hcl.controllers.rest.OrderItemRestController;
 import com.hcl.controllers.rest.UserRestController;
 import com.hcl.model.Authority;
@@ -8,6 +9,7 @@ import com.hcl.model.Item;
 import com.hcl.model.Order;
 import com.hcl.model.OrderItem;
 import com.hcl.model.User;
+import com.hcl.repository.ItemRepository;
 import com.hcl.service.AuthService;
 import com.hcl.service.ItemService;
 import com.hcl.service.OrderItemService;
@@ -24,6 +26,8 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
@@ -41,6 +45,9 @@ public class h2DatabaseTests {
     UserRestController userRestController;
 
     @Autowired
+    AdminController adminController;
+    
+    @Autowired
     UserService userService;
     
     @Autowired
@@ -54,15 +61,20 @@ public class h2DatabaseTests {
     
     @Autowired
 	OrderService orderService;
+    
+    @Autowired
+    ItemRepository itemRepository;
 
     private MockMvc mockMvc;
     private MockMvc mockMvc2;
+    private MockMvc mockMvc3;
 
     @BeforeEach
     public void init(){
     	mapper = new ObjectMapper();
         mockMvc = MockMvcBuilders.standaloneSetup(orderItemRestController).build();
         mockMvc2 = MockMvcBuilders.standaloneSetup(userRestController).build();
+        mockMvc3 = MockMvcBuilders.standaloneSetup(adminController).build();
     }
 //Need to add cascade stuff to annotations in model... Then something wrong with sql injection
 //    @Test
@@ -124,5 +136,22 @@ public class h2DatabaseTests {
     	userService.insertUser(new User(1, "test", "firstNameTest", "lastNameTest"));
     	mockMvc2.perform(delete("/user/1")).andExpect(status().isOk());
     }
+    
+//    @Test
+//    @WithMockUser(username = "test", password = "pass", roles = "USER")
+//    public void editItemsPostTest() throws Exception {
+//    	Item item1 = new Item(9.99, "test1", "", "", "", 100L);
+//    	item1.setId(1);
+//        itemRepository.save(item1);
+//        mockMvc3.perform(post("/editItem/1")
+//                .param("price", "9.99")
+//                .param("name", "new name")
+//                .param("thumbnail", "")
+//                .param("category", "")
+//                .param("description", ""))
+//                .andExpect(status().isOk());
+//        assertTrue(itemRepository.findAll().stream().anyMatch(item -> item.getName() == "new name"));
+//        assertFalse(itemRepository.findAll().stream().anyMatch(item -> item.getName() == "test1"));
+//    }
     
 }
